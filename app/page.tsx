@@ -1,17 +1,19 @@
-import { SiteHeader } from "@/components/site-header";
-import { HeroSection } from "@/components/hero-section";
-import { FeatureSection } from "@/components/feature-section";
-import { Footer } from "@/components/footer";
+import { Header } from "@/components/header"
+import { HeroSection } from "@/components/hero-section"
+import { HowItWorksSection } from "@/components/how-it-works-section"
+import { PopularLawsSection } from "@/components/popular-laws-section"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="flex-1">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>
         <HeroSection />
-        <FeatureSection />
+        <HowItWorksSection />
+        <PopularLawsSection />
       </main>
       <Footer />
     </div>
-  );
+  )
 }
