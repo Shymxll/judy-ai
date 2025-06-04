@@ -40,9 +40,9 @@ export function HeroSection({ className }: HeroSectionProps) {
           </div>
           <div className="flex items-center justify-center">
             <div className="relative h-[350px] w-[350px] sm:h-[400px] sm:w-[400px] lg:h-[450px] lg:w-[450px] xl:h-[500px] xl:w-[500px]">
-              <div className="absolute inset-0 scale-[0.8] rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 blur-3xl"></div>
-              <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-primary/20 via-primary/5 to-primary/20 blur-xl"></div>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/30 via-primary/10 to-primary/30 opacity-80"></div>
+              <div className="absolute inset-0 scale-[0.8] rounded-full bg-linear-to-r from-primary/20 via-primary/10 to-primary/20 blur-3xl"></div>
+              <div className="absolute inset-0 animate-pulse rounded-full bg-linear-to-r from-primary/20 via-primary/5 to-primary/20 blur-xl"></div>
+              <div className="absolute inset-0 rounded-full bg-linear-to-r from-primary/30 via-primary/10 to-primary/30 opacity-80"></div>
               <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-background p-4 shadow-xl sm:h-[350px] sm:w-[350px] lg:h-[400px] lg:w-[400px]">
                 <div className="flex h-full w-full flex-col items-center justify-center space-y-6 rounded-lg border border-border p-6">
                   <div className="h-12 w-12 rounded-full bg-primary"></div>
