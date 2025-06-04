@@ -18,7 +18,7 @@ export function HowItWorksSection() {
   ]
 
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-16 md:py-24 bg-background grid-background">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl md:text-6xl font-heading mb-12 text-center">HOW IT WORKS</h2>
 
