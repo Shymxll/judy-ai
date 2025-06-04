@@ -34,7 +34,7 @@ export function SiteHeader() {
             <Link
               href="/login"
               className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
+                buttonVariants({ variant: "neutral", size: "sm" }),
                 "px-4"
               )}
             >

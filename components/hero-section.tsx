@@ -32,7 +32,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="transition-all hover:bg-accent">
+                <Button size="lg" variant="neutral" className="transition-all hover:bg-accent">
                   Contact Us
                 </Button>
               </Link>
