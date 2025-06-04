@@ -24,7 +24,7 @@ export function HowItWorksSection() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step) => (
-            <div key={step.number} className="neobrutalism-card p-8">
+            <div key={step.number} className="neobrutalism-card p-8 rounded-md">
               <div className="text-6xl font-heading mb-4 text-yellow">{step.number}</div>
               <h3 className="text-2xl font-heading mb-4">{step.title}</h3>
               <p className="text-lg font-base text-foreground/80">{step.description}</p>

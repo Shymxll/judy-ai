@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export function PopularLawsSection() {
   const laws = [
@@ -31,7 +32,7 @@ export function PopularLawsSection() {
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {laws.map((law) => (
-            <div key={law.id} className="neobrutalism-card p-6 bg-yellow">
+            <div key={law.id} className="neobrutalism-card p-6 bg-yellow rounded-md">
               <h3 className="text-xl font-heading mb-2">{law.title}</h3>
               <p className="text-sm font-base text-foreground/70 mb-2">Case #{law.caseId}</p>
               <p className="text-base font-base">{law.summary}</p>
@@ -41,7 +42,7 @@ export function PopularLawsSection() {
 
         <div className="text-center">
           <Link href="/browse-laws">
-            <button className="neobrutalism-button bg-yellow text-xl">View All Laws</button>
+            <Button className="neobrutalism-button bg-yellow text-xl">View All Laws</Button>
           </Link>
         </div>
       </div>

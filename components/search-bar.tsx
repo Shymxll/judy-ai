@@ -10,7 +10,7 @@ export function SearchBar() {
       <div className="max-w-2xl mx-auto">
         <input
           type="text"
-          className="neobrutalism-input w-full text-xl"
+          className="neobrutalism-input w-full text-xl rounded-md "
           placeholder="Search laws by keyword, topic, or case number..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

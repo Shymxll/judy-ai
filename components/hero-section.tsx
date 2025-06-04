@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export function HeroSection() {
   return (
@@ -14,7 +15,7 @@ export function HeroSection() {
           </p>
 
           <Link href="/start-case">
-            <button className="neobrutalism-button bg-red text-2xl">Start Now</button>
+            <Button className="neobrutalism-button bg-red text-2xl">Start Now</Button>
           </Link>
         </div>
       </div>

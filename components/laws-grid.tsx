@@ -62,9 +62,9 @@ export function LawsGrid() {
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {laws.map((law) => (
         <Link key={law.id} href={`/law/${law.id}`}>
-          <div className="neobrutalism-card p-6 hover:translate-x-1 hover:translate-y-1 transition-transform cursor-pointer">
+          <div className="neobrutalism-card p-6 hover:translate-x-1 hover:translate-y-1 transition-transform cursor-pointer rounded-md">
             <div className="mb-4">
-              <span className="inline-block px-3 py-1 bg-yellow border-2 border-border text-sm font-heading">
+              <span className="inline-block px-3 py-1 bg-yellow border-2 border-border text-sm font-heading rounded-md">
                 {law.category}
               </span>
             </div>

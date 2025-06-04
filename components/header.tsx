@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LoginModal } from "@/components/login-modal"
 import { useAuth } from "@/hooks/use-auth"
 import { Menu, X } from "lucide-react"
+import {Button} from "@/components/ui/button"
 
 export function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -60,36 +61,36 @@ export function Header() {
               {user ? (
                 <div className="flex items-center space-x-4">
                   <span className="font-heading">Hi, {user.name}!</span>
-                  <button onClick={logout} className="neobrutalism-button bg-red text-sm px-4 py-2">
+                  <Button onClick={logout} className="neobrutalism-button bg-red text-sm px-4 py-2">
                     Logout
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="flex items-center space-x-4">
-                  <button
+                  <Button
                     onClick={() => setShowLoginModal(true)}
                     className="neobrutalism-button bg-secondary-background text-sm px-4 py-2"
                   >
                     Login
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => setShowLoginModal(true)}
                     className="neobrutalism-button bg-green text-sm px-4 py-2"
                   >
                     Register
-                  </button>
+                  </Button>
                 </div>
               )}
               <ThemeToggle />
             </div>
 
             {/* Mobile Menu Button */}
-            <button
+            <Button
               className="lg:hidden neobrutalism-button bg-secondary-background p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -129,7 +130,7 @@ export function Header() {
                 {user ? (
                   <div className="space-y-4">
                     <p className="font-heading text-lg">Hi, {user.name}!</p>
-                    <button
+                    <Button
                       onClick={() => {
                         logout()
                         closeMobileMenu()
@@ -137,11 +138,11 @@ export function Header() {
                       className="neobrutalism-button bg-red text-sm w-full"
                     >
                       Logout
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <button
+                    <Button
                       onClick={() => {
                         setShowLoginModal(true)
                         closeMobileMenu()
@@ -149,8 +150,8 @@ export function Header() {
                       className="neobrutalism-button bg-secondary-background text-sm w-full"
                     >
                       Login
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => {
                         setShowLoginModal(true)
                         closeMobileMenu()
@@ -158,7 +159,7 @@ export function Header() {
                       className="neobrutalism-button bg-green text-sm w-full"
                     >
                       Register
-                    </button>
+                    </Button>
                   </div>
                 )}
                 <div className="flex justify-center">

@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { X } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import {Button} from "@/components/ui/button"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -46,9 +47,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   return (
     <div className="fixed inset-0 bg-overlay z-50 flex items-center justify-center p-4" onClick={handleOverlayClick}>
       <div className="neobrutalism-card bg-secondary-background p-8 w-full max-w-md relative">
-        <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-background rounded">
+        <Button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-background rounded">
           <X className="w-6 h-6" />
-        </button>
+        </Button>
 
         <h2 className="text-3xl font-heading mb-6 text-center">{isLogin ? "Login" : "Register"}</h2>
 
@@ -91,16 +92,16 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             />
           </div>
 
-          <button type="submit" className="neobrutalism-button bg-green w-full text-lg">
+          <Button type="submit" className="neobrutalism-button bg-green w-full text-lg">
             {isLogin ? "Login" : "Register"}
-          </button>
+          </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="font-base">{isLogin ? "Don't have an account?" : "Already have an account?"}</p>
-          <button onClick={() => setIsLogin(!isLogin)} className="font-heading text-lg underline decoration-2 mt-2">
+          <Button onClick={() => setIsLogin(!isLogin)} className="font-heading text-lg underline decoration-2 mt-2">
             {isLogin ? "Register here" : "Login here"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

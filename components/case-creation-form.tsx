@@ -26,7 +26,7 @@ export function CaseCreationForm() {
   }
 
   return (
-    <div className="neobrutalism-card p-8">
+    <div className="neobrutalism-card p-8 rounded-md">
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-heading">Step {step} of 3</h2>
@@ -47,7 +47,7 @@ export function CaseCreationForm() {
             <label className="block text-xl font-heading mb-2">Case Title</label>
             <input
               type="text"
-              className="neobrutalism-input w-full"
+              className="neobrutalism-input w-full rounded-md"
               placeholder="Briefly describe your conflict..."
               value={caseData.title}
               onChange={(e) => setCaseData({ ...caseData, title: e.target.value })}
@@ -57,7 +57,7 @@ export function CaseCreationForm() {
           <div>
             <label className="block text-xl font-heading mb-2">Your Side of the Story</label>
             <textarea
-              className="neobrutalism-input w-full h-40 resize-none"
+              className="neobrutalism-input w-full h-40 resize-none rounded-md"
               placeholder="Explain your perspective in detail..."
               value={caseData.yourSide}
               onChange={(e) => setCaseData({ ...caseData, yourSide: e.target.value })}
@@ -72,14 +72,14 @@ export function CaseCreationForm() {
             <label className="block text-xl font-heading mb-2">Friend's Email</label>
             <input
               type="email"
-              className="neobrutalism-input w-full"
+              className="neobrutalism-input w-full rounded-md"
               placeholder="friend@example.com"
               value={caseData.friendEmail}
               onChange={(e) => setCaseData({ ...caseData, friendEmail: e.target.value })}
             />
           </div>
 
-          <div className="neobrutalism-card p-6 bg-yellow/20">
+          <div className="neobrutalism-card p-6 bg-yellow/20 rounded-md">
             <h3 className="text-lg font-heading mb-2">What happens next?</h3>
             <p className="font-base">
               We'll send your friend an invitation to present their side of the story. Once both perspectives are

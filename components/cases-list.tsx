@@ -43,7 +43,7 @@ export function CasesList() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {cases.map((case_) => (
-        <div key={case_.id} className="neobrutalism-card p-6">
+        <div key={case_.id} className="neobrutalism-card p-6 rounded-md">
           <div className="flex items-start justify-between mb-4">
             <div>
               <h3 className="text-2xl font-heading mb-2">{case_.title}</h3>
@@ -52,7 +52,7 @@ export function CasesList() {
               </p>
             </div>
 
-            <div className={`px-4 py-2 border-2 border-border ${getStatusColor(case_.status)}`}>
+            <div className={`px-4 py-2 border-2 border-border rounded-md ${getStatusColor(case_.status)}`}>
               <span className="font-heading text-sm">{case_.status}</span>
             </div>
           </div>
@@ -65,12 +65,12 @@ export function CasesList() {
 
           <div className="flex space-x-4">
             <Link href={`/case/${case_.id}`}>
-              <button className="neobrutalism-button bg-blue text-sm">View Details</button>
+              <Button className="neobrutalism-button bg-blue text-sm">View Details</Button>
             </Link>
 
             {case_.lawId && (
               <Link href={`/law/${case_.lawId}`}>
-                <button className="neobrutalism-button bg-green text-sm">View Law</button>
+                <Button className="neobrutalism-button bg-green text-sm">View Law</Button>
               </Link>
             )}
           </div>
