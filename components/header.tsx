@@ -6,14 +6,14 @@ import Link from "next/link"
 import { useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LoginModal } from "@/components/login-modal"
-import { useAuth } from "@/hooks/use-auth"
+import { useSupabaseAuth } from "@/providers/supabase-auth-provider"
 import { Menu, X } from "lucide-react"
-import {Button} from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 export function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { user, logout } = useSupabaseAuth()
 
   const handleProtectedRoute = (e: React.MouseEvent, route: string) => {
     if (!user) {
@@ -25,6 +25,9 @@ export function Header() {
   const closeMobileMenu = () => {
     setMobileMenuOpen(false)
   }
+
+  // User name metadata'dan alınır, yoksa email gösterilir
+  const userName = user?.user_metadata?.name || user?.email || "User"
 
   return (
     <>
@@ -60,7 +63,7 @@ export function Header() {
             <div className="hidden lg:flex items-center space-x-4">
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <span className="font-heading">Hi, {user.name}!</span>
+                  <span className="font-heading">Hi, {userName}!</span>
                   <Button onClick={logout} className="neobrutalism-button bg-red text-sm px-4 py-2">
                     Logout
                   </Button>
@@ -129,7 +132,7 @@ export function Header() {
               <div className="border-t-2 border-border pt-4 space-y-4">
                 {user ? (
                   <div className="space-y-4">
-                    <p className="font-heading text-lg">Hi, {user.name}!</p>
+                    <p className="font-heading text-lg">Hi, {userName}!</p>
                     <Button
                       onClick={() => {
                         logout()
