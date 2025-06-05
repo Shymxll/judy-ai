@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { useSupabaseAuth } from "@/providers/supabase-auth-provider"
+import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabaseClient"
 
 export function CaseCreationForm() {
   const [step, setStep] = useState(1)
@@ -11,6 +14,10 @@ export function CaseCreationForm() {
     friendEmail: "",
     friendSide: "",
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const { user } = useSupabaseAuth()
+  const router = useRouter()
 
   const handleNext = () => {
     if (step < 3) setStep(step + 1)
@@ -20,9 +27,67 @@ export function CaseCreationForm() {
     if (step > 1) setStep(step - 1)
   }
 
-  const handleSubmit = () => {
-    // Handle case submission
-    console.log("Case submitted:", caseData)
+  const handleSubmit = async () => {
+    setError("")
+    setLoading(true)
+    try {
+      if (!user) {
+        setError("You must be logged in to create a case.")
+        setLoading(false)
+        return
+      }
+      // 1. Case oluştur
+      const { data: caseInsert, error: caseError } = await supabase
+        .from("cases")
+        .insert({
+          creator_id: user.id,
+          title: caseData.title,
+          description: caseData.yourSide,
+          status: "waiting",
+        })
+        .select()
+        .single()
+      if (caseError || !caseInsert) throw new Error(caseError?.message || "Case creation failed.")
+      // 2. Creator participant ekle
+      const { data: creatorParticipant, error: creatorError } = await supabase
+        .from("case_participants")
+        .insert({
+          case_id: caseInsert.id,
+          user_id: user.id,
+          email: user.email,
+          role: "creator",
+          joined_at: new Date().toISOString(),
+        })
+        .select()
+        .single()
+      if (creatorError || !creatorParticipant) throw new Error(creatorError?.message || "Creator participant failed.")
+      // 3. Friend participant ekle
+      const { data: friendParticipant, error: friendError } = await supabase
+        .from("case_participants")
+        .insert({
+          case_id: caseInsert.id,
+          email: caseData.friendEmail,
+          role: "invited",
+        })
+        .select()
+        .single()
+      if (friendError || !friendParticipant) throw new Error(friendError?.message || "Friend participant failed.")
+      // 4. Creator detayını ekle
+      const { error: detailError } = await supabase
+        .from("case_details")
+        .insert({
+          case_id: caseInsert.id,
+          participant_id: creatorParticipant.id,
+          details: caseData.yourSide,
+        })
+      if (detailError) throw new Error(detailError.message)
+      // Başarılıysa yönlendir
+      router.push("/my-cases")
+    } catch (err: any) {
+      setError(err.message || "An error occurred.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -112,6 +177,8 @@ export function CaseCreationForm() {
         </div>
       )}
 
+      {error && <div className="text-red-600 mb-4" role="alert">{error}</div>}
+
       <div className="flex justify-between mt-8">
         {step > 1 && (
           <Button onClick={handleBack} className="neobrutalism-button bg-secondary-background">
@@ -125,8 +192,8 @@ export function CaseCreationForm() {
               Next
             </Button>
           ) : (
-            <Button onClick={handleSubmit} className="neobrutalism-button bg-red">
-              Submit Case
+            <Button onClick={handleSubmit} className="neobrutalism-button bg-red" disabled={loading} aria-busy={loading}>
+              {loading ? "Submitting..." : "Submit Case"}
             </Button>
           )}
         </div>
