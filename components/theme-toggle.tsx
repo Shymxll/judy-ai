@@ -18,8 +18,8 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button
-      className="neobrutalism-button bg-secondary-background p-2"
+    <Button 
+      className="neobrutalism-button cursor-pointer"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
     >
