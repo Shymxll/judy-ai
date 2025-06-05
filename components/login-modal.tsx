@@ -2,10 +2,12 @@
 
 import type React from "react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
+import { supabase } from "@/lib/supabaseClient"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -19,6 +21,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     password: "",
     name: "",
   })
+  const router = useRouter()
 
   const resetForm = () => {
     setFormData({ email: "", password: "", name: "" })
@@ -26,41 +29,37 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Login failed")
+      const res = await axios.post("/api/login", { email, password })
+      const data = res.data
+      if (data.error) throw new Error(data.error || "Login failed")
       if (data.session) {
         localStorage.setItem("supabaseSession", JSON.stringify(data.session))
+        await supabase.auth.signInWithPassword({ email, password })
       }
       return data
     },
     onSuccess: () => {
       resetForm()
       onClose()
+      router.push("/my-cases")
     },
   })
 
   const registerMutation = useMutation({
     mutationFn: async ({ name, email, password }: { name: string; email: string; password: string }) => {
-      const res = await axios.post("/api/register", {
-        name,
-        email,
-        password,
-      })
+      const res = await axios.post("/api/register", { name, email, password })
       const data = res.data
       if (data.error) throw new Error(data.error || "Register failed")
       if (data.session) {
         localStorage.setItem("supabaseSession", JSON.stringify(data.session))
+        await supabase.auth.signInWithPassword({ email, password })
       }
       return data
     },
     onSuccess: () => {
       resetForm()
       onClose()
+      router.push("/my-cases")
     },
   })
 

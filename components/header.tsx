@@ -1,18 +1,38 @@
 "use client"
 
-import type React from "react"
+import React, { useState, useRef } from "react"
 
 import Link from "next/link"
-import { useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LoginModal } from "@/components/login-modal"
 import { useSupabaseAuth } from "@/providers/supabase-auth-provider"
-import { Menu, X } from "lucide-react"
+import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card } from "./ui/card"
+
+function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt={name}
+        className="w-9 h-9 rounded-full object-cover border-2 border-primary"
+      />
+    )
+  }
+  const initial = name?.[0]?.toUpperCase() || "U"
+  return (
+    <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg border-2 border-primary">
+      {initial}
+    </div>
+  )
+}
 
 export function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const { user, logout } = useSupabaseAuth()
 
   const handleProtectedRoute = (e: React.MouseEvent, route: string) => {
@@ -26,8 +46,27 @@ export function Header() {
     setMobileMenuOpen(false)
   }
 
-  // User name metadata'dan alınır, yoksa email gösterilir
+  // User info
   const userName = user?.user_metadata?.name || user?.email || "User"
+  const userEmail = user?.email || ""
+  const avatarUrl = user?.user_metadata?.avatar_url
+
+  // Dropdown kapama (tıklama dışı)
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [dropdownOpen])
 
   return (
     <>
@@ -62,11 +101,35 @@ export function Header() {
             {/* Desktop Auth & Theme */}
             <div className="hidden lg:flex items-center space-x-4">
               {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="font-heading">Hi, {userName}!</span>
-                  <Button onClick={logout} className="neobrutalism-button bg-red text-sm px-4 py-2">
-                    Logout
-                  </Button>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    className="flex items-center space-x-2 focus:outline-none"
+                    onClick={() => setDropdownOpen((v) => !v)}
+                    aria-haspopup="true"
+                    aria-expanded={dropdownOpen}
+                  >
+                    <UserAvatar name={userName} avatarUrl={avatarUrl} />
+                    <span className="font-heading">{userName}</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {dropdownOpen && (
+                    <Card className="absolute right-0 mt-2 w-72 bg-white border rounded shadow-lg z-50 py-2">
+                      <div className="px-4 py-2 flex items-center space-x-3 border-b">
+                        <UserAvatar name={userName} avatarUrl={avatarUrl} />
+                        <div>
+                          <div className="font-bold">{userName}</div>
+                          <div className="text-xs text-gray-500">{userEmail}</div>
+                        </div>
+                      </div>
+                      <Button
+                        className="w-full text-left py-6 mx-auto border-t border-border hover:bg-gray-100 font-medium hover:text-red-600 bg-red-600 text-white cursor-pointer"
+                        onClick={logout}
+                        variant="reverse"
+                      >
+                        Logout
+                      </Button>
+                    </Card>
+                  )}
                 </div>
               ) : (
                 <div className="flex items-center space-x-4">
@@ -132,7 +195,13 @@ export function Header() {
               <div className="border-t-2 border-border pt-4 space-y-4">
                 {user ? (
                   <div className="space-y-4">
-                    <p className="font-heading text-lg">Hi, {userName}!</p>
+                    <div className="flex items-center space-x-3">
+                      <UserAvatar name={userName} avatarUrl={avatarUrl} />
+                      <div>
+                        <div className="font-bold">{userName}</div>
+                        <div className="text-xs text-gray-500">{userEmail}</div>
+                      </div>
+                    </div>
                     <Button
                       onClick={() => {
                         logout()
