@@ -1,14 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
 import { useSupabaseAuth } from "@/providers/supabase-auth-provider"
 import { supabase } from "@/lib/supabaseClient"
 import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
-export default function CaseDetailPage(
-    { params }: { params: { id: string } }
-) {
+export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const { user } = useSupabaseAuth()
     const { id } = params
     const [caseData, setCaseData] = useState<any>(null)
@@ -109,65 +110,94 @@ export default function CaseDetailPage(
         }
     }
 
-    if (loading) return <div className="text-center py-12 text-xl">Loading...</div>
-    if (error) return <div className="text-center py-12 text-red-600">{error}</div>
-    if (!caseData) return <div className="text-center py-12">Case not found.</div>
+    if (loading) return <div className="flex justify-center items-center min-h-[40vh]"><div className="animate-spin rounded-full h-10 w-10 border-b-4 border-yellow border-4" /></div>
+    if (error) return <div className="text-center py-12 text-red-600 font-heading text-xl">{error}</div>
+    if (!caseData) return <div className="text-center py-12 font-heading text-lg">Case not found.</div>
 
     return (
-        <div className="max-w-3xl mx-auto py-12">
-            <h1 className="text-4xl font-heading mb-4">{caseData.title}</h1>
-            <p className="mb-6 text-lg text-foreground/80">{caseData.description}</p>
-            <div className="mb-8">
-                <h2 className="text-2xl font-heading mb-2">Participants</h2>
-                <ul className="list-disc ml-6">
-                    {participants.map((p) => (
-                        <li key={p.id} className="mb-1">
-                            {p.email} <span className="text-xs text-gray-500">({p.role})</span>
-                        </li>
-                    ))}
-                </ul>
+        <div className="max-w-3xl mx-auto py-12 space-y-8">
+            <div className="neobrutalism-card border-4 border-border bg-yellow/10 shadow-lg p-0">
+                <CardHeader className="bg-yellow/30 border-b-4 border-border rounded-t-base">
+                    <CardTitle className="font-heading text-3xl">{caseData.title}</CardTitle>
+                    <CardDescription className="font-base text-lg">{caseData.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                    <div className="mb-2">
+                        <span className="font-heading text-lg">Status:</span> <Badge>{caseData.status}</Badge>
+                    </div>
+                    <div>
+                        <span className="font-heading text-lg">Created:</span> {new Date(caseData.created_at).toLocaleString()}
+                    </div>
+                </CardContent>
             </div>
-            <div className="mb-8">
-                <h2 className="text-2xl font-heading mb-4">AI Questions</h2>
-                {questions.length === 0 && <div>No questions yet.</div>}
-                {unanswered.length > 0 && (
-                    <div className="mb-6">
-                        <h3 className="text-lg font-heading mb-2">Answer the following questions:</h3>
-                        {unanswered.map((q) => (
-                            <div key={q.id} className="mb-4">
-                                <div className="font-base mb-2">{q.question}</div>
-                                <textarea
-                                    className="neobrutalism-input w-full h-24 mb-2"
-                                    value={answerInputs[q.id] || ""}
-                                    onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                                    disabled={submitting}
-                                />
-                                <Button
-                                    onClick={() => handleSubmitAnswer(q.id)}
-                                    className="neobrutalism-button bg-green"
-                                    disabled={submitting || !answerInputs[q.id]}
-                                    aria-busy={submitting}
-                                >
-                                    Submit Answer
-                                </Button>
+
+            <div className="neobrutalism-card border-4 border-border bg-yellow/10 shadow-lg">
+                <CardHeader className="bg-yellow/30 border-b-4 border-border rounded-t-base">
+                    <CardTitle className="font-heading text-2xl">Participants</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-wrap gap-4">
+                        {participants.map((p) => (
+                            <div key={p.id} className="flex items-center gap-3 p-3 bg-white border-2 border-border rounded-base shadow-sm">
+                                <Avatar>
+                                    <AvatarImage src={p.avatar_url} />
+                                    <AvatarFallback>{p.email?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <div className="font-heading text-base">{p.email}</div>
+                                    <Badge variant={p.role === "creator" ? "default" : "secondary"}>{p.role}</Badge>
+                                </div>
                             </div>
                         ))}
                     </div>
-                )}
-                {answered.length > 0 && (
-                    <div>
-                        <h3 className="text-lg font-heading mb-2">Your Answers:</h3>
-                        {answered.map((q) => {
-                            const a = answers.find((ans) => ans.question_id === q.id)
+                </CardContent>
+            </div>
+
+            <div className="neobrutalism-card border-4 border-border bg-yellow/10 shadow-lg">
+                <CardHeader className="bg-yellow/30 border-b-4 border-border rounded-t-base">
+                    <CardTitle className="font-heading text-2xl">AI Questions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {questions.length === 0 && <div className="font-base text-gray-500">No questions yet.</div>}
+                    <Accordion type="multiple" className="w-full">
+                        {questions.map((q) => {
+                            const answeredObj = answers.find((a) => a.question_id === q.id)
                             return (
-                                <div key={q.id} className="mb-4">
-                                    <div className="font-base mb-1">{q.question}</div>
-                                    <div className="bg-gray-100 p-3 rounded-md border text-base">{a?.answer}</div>
-                                </div>
+                                <AccordionItem key={q.id} value={q.id} className="border-2 border-border rounded-base mb-2 bg-white">
+                                    <AccordionTrigger className="font-heading text-lg px-4 py-2">{q.question}</AccordionTrigger>
+                                    <AccordionContent>
+                                        {answeredObj ? (
+                                            <Card className="bg-green-50 border-green-200 border-2">
+                                                <CardContent>
+                                                    <div className="text-base font-base">{answeredObj.answer}</div>
+                                                </CardContent>
+                                            </Card>
+                                        ) : myParticipant ? (
+                                            <div className="space-y-2">
+                                                <textarea
+                                                    className="neobrutalism-input w-full h-24 mb-2 border-2 border-border rounded-base"
+                                                    value={answerInputs[q.id] || ""}
+                                                    onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                                                    disabled={submitting}
+                                                />
+                                                <Button
+                                                    onClick={() => handleSubmitAnswer(q.id)}
+                                                    className="neobrutalism-button bg-green font-heading"
+                                                    disabled={submitting || !answerInputs[q.id]}
+                                                    aria-busy={submitting}
+                                                >
+                                                    Submit Answer
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <div className="text-gray-400 italic">You are not a participant for this case.</div>
+                                        )}
+                                    </AccordionContent>
+                                </AccordionItem>
                             )
                         })}
-                    </div>
-                )}
+                    </Accordion>
+                </CardContent>
             </div>
         </div>
     )
