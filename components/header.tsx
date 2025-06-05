@@ -9,6 +9,7 @@ import { useSupabaseAuth } from "@/providers/supabase-auth-provider"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "./ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 
 function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   if (avatarUrl) {
@@ -74,7 +75,7 @@ export function Header() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-4xl font-heading text-foreground">
-              JudyAI
+              Judy
             </Link>
 
             {/* Desktop Navigation */}
@@ -108,21 +109,34 @@ export function Header() {
                     aria-haspopup="true"
                     aria-expanded={dropdownOpen}
                   >
-                    <UserAvatar name={userName} avatarUrl={avatarUrl} />
+                    <Avatar className="w-9 h-9 rounded-full object-cover border-2 border-primary">
+                      <AvatarImage src={avatarUrl} />
+                      <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+                    </Avatar>
                     <span className="font-heading">{userName}</span>
                     <ChevronDown className="w-4 h-4" />
                   </button>
                   {dropdownOpen && (
                     <Card className="absolute right-0 mt-2 w-72 bg-white border rounded shadow-lg z-50 py-2">
                       <div className="px-4 py-2 flex items-center space-x-3 border-b">
-                        <UserAvatar name={userName} avatarUrl={avatarUrl} />
+                        <Avatar className="w-9 h-9 rounded-full object-cover border-2 border-primary">
+                          <AvatarImage src={avatarUrl} />
+                          <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+                        </Avatar>
                         <div>
                           <div className="font-bold">{userName}</div>
                           <div className="text-xs text-gray-500">{userEmail}</div>
                         </div>
                       </div>
+                      <Link
+                        href="/settings"
+                        className="block w-full text-left px-4 py-3 hover:bg-gray-100 font-medium text-foreground"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        Settings
+                      </Link>
                       <Button
-                        className="w-full text-left py-6 mx-auto border-t border-border hover:bg-gray-100 font-medium hover:text-red-600 bg-red-600 text-white cursor-pointer"
+                        className="w-full text-left py-3 border-t border-border hover:bg-gray-100 font-medium hover:text-red-600 bg-red-600 text-white cursor-pointer rounded-none"
                         onClick={logout}
                         variant="reverse"
                       >
