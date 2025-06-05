@@ -5,8 +5,8 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ReactQueryProvider } from "@/providers/react-query-provider"
 import { SupabaseAuthProvider } from "@/providers/supabase-auth-provider"
-import { Toaster } from "@/components/ui/toaster"
 import { Header } from "@/components/header"
+import { NeoToastProvider } from "@/components/neo-toaster"
 const inter = Inter({ subsets: ["latin"], weight: ["400", "600", "700", "900"] })
 
 export const metadata: Metadata = {
@@ -25,9 +25,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <ReactQueryProvider>
             <SupabaseAuthProvider>
-              <Toaster />
-              <Header />
-              {children}
+              <NeoToastProvider>
+                <Header />
+                {children}
+              </NeoToastProvider>
             </SupabaseAuthProvider>
           </ReactQueryProvider>
         </ThemeProvider>
