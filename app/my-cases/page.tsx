@@ -5,7 +5,6 @@ import { CasesList } from "@/components/cases-list"
 export default function MyCasesPage() {
   return (
     <div className="min-h-screen bg-background grid-background">
-      <Header />
       <main className="py-16">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-heading mb-8 text-center">My Cases</h1>

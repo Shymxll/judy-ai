@@ -16,10 +16,13 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const [participants, setParticipants] = useState<any[]>([])
     const [questions, setQuestions] = useState<any[]>([])
     const [answers, setAnswers] = useState<any[]>([])
+    const [details, setDetails] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const [answerInputs, setAnswerInputs] = useState<{ [questionId: string]: string }>({})
     const [submitting, setSubmitting] = useState(false)
+    const [detailInput, setDetailInput] = useState("")
+    const [detailSubmitting, setDetailSubmitting] = useState(false)
 
     // Kullanıcının participant kaydını bul
     const myParticipant = participants.find(
@@ -63,6 +66,13 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                     if (aErr) throw new Error(aErr.message)
                     setAnswers(ans || [])
                 }
+                // Details
+                const { data: dets, error: detErr } = await supabase
+                    .from("case_details")
+                    .select("*")
+                    .eq("case_id", id)
+                if (detErr) throw new Error(detErr.message)
+                setDetails(dets || [])
             } catch (err: any) {
                 setError(err.message || "An error occurred.")
             } finally {
@@ -81,6 +91,14 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const answered = questions.filter(
         (q) => answers.find((a) => a.question_id === q.id)
     )
+
+    // Creator ve invited detayları
+    const creatorParticipant = participants.find((p) => p.role === "creator")
+    const invitedParticipant = participants.find((p) => p.role === "invited")
+    const creatorDetail = details.find((d) => d.participant_id === creatorParticipant?.id)
+    const invitedDetail = details.find((d) => d.participant_id === invitedParticipant?.id)
+    const isInvited = myParticipant?.role === "invited"
+    const hasWrittenDetail = !!details.find((d) => d.participant_id === myParticipant?.id)
 
     const handleAnswerChange = (qid: string, value: string) => {
         setAnswerInputs((prev) => ({ ...prev, [qid]: value }))
@@ -107,6 +125,29 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
             setError(err.message || "An error occurred.")
         } finally {
             setSubmitting(false)
+        }
+    }
+
+    const handleSubmitDetail = async () => {
+        if (!myParticipant) return
+        setDetailSubmitting(true)
+        setError("")
+        try {
+            if (!detailInput) return
+            const { error: detErr } = await supabase
+                .from("case_details")
+                .insert({
+                    case_id: id,
+                    participant_id: myParticipant.id,
+                    details: detailInput,
+                })
+            if (detErr) throw new Error(detErr.message)
+            setDetails((prev) => [...prev, { case_id: id, participant_id: myParticipant.id, details: detailInput }])
+            setDetailInput("")
+        } catch (err: any) {
+            setError(err.message || "An error occurred.")
+        } finally {
+            setDetailSubmitting(false)
         }
     }
 
@@ -149,6 +190,62 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </CardContent>
+            </div>
+
+            <div className="neobrutalism-card border-4 border-border bg-yellow/10 shadow-lg">
+                <CardHeader className="bg-yellow/30 border-b-4 border-border rounded-t-base">
+                    <CardTitle className="font-heading text-2xl">Case Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-col gap-6">
+                        {/* Creator'ın detayı */}
+                        {creatorParticipant && (
+                            <Card className="border-2 border-border bg-white">
+                                <CardHeader>
+                                    <CardTitle className="font-heading text-lg">{creatorParticipant.email} <Badge className="ml-2">creator</Badge></CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="font-base text-gray-700 min-h-[40px]">
+                                        {creatorDetail ? creatorDetail.details : <span className="italic text-gray-400">No details yet.</span>}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+                        {/* Invited'ın detayı veya formu */}
+                        {invitedParticipant && (
+                            <Card className="border-2 border-border bg-white">
+                                <CardHeader>
+                                    <CardTitle className="font-heading text-lg">{invitedParticipant.email} <Badge className="ml-2">invited</Badge></CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {invitedParticipant.id === myParticipant?.id && !hasWrittenDetail ? (
+                                        <div className="space-y-2">
+                                            <textarea
+                                                className="neobrutalism-input w-full h-24 mb-2 border-2 border-border rounded-base"
+                                                value={detailInput}
+                                                onChange={(e) => setDetailInput(e.target.value)}
+                                                placeholder="Write your side of the story..."
+                                                disabled={detailSubmitting}
+                                            />
+                                            <Button
+                                                onClick={handleSubmitDetail}
+                                                className="neobrutalism-button bg-green font-heading"
+                                                disabled={detailSubmitting || !detailInput}
+                                                aria-busy={detailSubmitting}
+                                            >
+                                                Submit Your Details
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <div className="font-base text-gray-700 min-h-[40px]">
+                                            {invitedDetail ? invitedDetail.details : <span className="italic text-gray-400">No details yet.</span>}
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </CardContent>
             </div>
