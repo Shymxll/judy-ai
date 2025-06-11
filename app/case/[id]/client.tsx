@@ -17,6 +17,10 @@ export enum CaseStatus {
     WAITING_FOR_JUDGE = "waiting_for_judge",
     WAITING_FOR_COURT = "waiting_for_court",
     WAITING_FOR_EXECUTION = "waiting_for_execution",
+    COMPLETED = "completed",
+    CANCELLED = "cancelled",
+    DELETED = "deleted",
+    CLOSED = "closed",
 }
 
 export default function CaseDetailPage({ params }: { params: { id: string } }) {
