@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { FaGavel } from "react-icons/fa"
 import { GiCrown } from "react-icons/gi"
+import { CaseQuestionAnswer } from "./components/case-question-answer"
 
 export enum CaseStatus {
     WAITING = "waiting",
@@ -17,6 +18,7 @@ export enum CaseStatus {
     WAITING_FOR_JUDGE = "waiting_for_judge",
     WAITING_FOR_COURT = "waiting_for_court",
     WAITING_FOR_EXECUTION = "waiting_for_execution",
+    WAITING_FOR_ANSWER = "waiting_for_answer",
     COMPLETED = "completed",
     CANCELLED = "cancelled",
     DELETED = "deleted",
@@ -26,6 +28,9 @@ export enum CaseStatus {
 export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const { user } = useSupabaseAuth()
     const { id } = params
+    if (!id || typeof id !== "string") {
+        return <div className="text-center py-12 text-red-600 font-heading text-xl">Geçersiz veya eksik case ID</div>
+    }
     const [caseData, setCaseData] = useState<any>(null)
     const [participants, setParticipants] = useState<any[]>([])
     const [questions, setQuestions] = useState<any[]>([])
@@ -44,10 +49,13 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     )
 
     useEffect(() => {
+        console.log("id:", id, "user:", user)
+        if (!id || typeof id !== "string" || !user) return
         const fetchData = async () => {
             setLoading(true)
             setError("")
             try {
+                console.log("Supabase sorgusu id:", id)
                 // Case
                 const { data: caseRow, error: caseErr } = await supabase
                     .from("cases")
@@ -64,21 +72,34 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                 if (partErr) throw new Error(partErr.message)
                 setParticipants(parts || [])
                 // Questions
-                const { data: qs, error: qErr } = await supabase
-                    .from("case_questions")
-                    .select("*")
-                    .eq("case_id", id)
-                if (qErr) throw new Error(qErr.message)
-                setQuestions(qs || [])
+                let qs: any[] = []
+                let qErr = null
+                if (myParticipant?.id) {
+                    const result = await supabase
+                        .from("case_questions")
+                        .select("*")
+                        .eq("case_id", id)
+                        .eq("participant_id", myParticipant.id)
+                    qs = result.data || []
+                    qErr = result.error
+                    if (qErr) throw new Error(qErr.message)
+                    setQuestions(qs)
+                } else {
+                    setQuestions([])
+                }
                 // Answers
-                if (myParticipant) {
-                    const { data: ans, error: aErr } = await supabase
+                if (myParticipant?.id && qs && qs.length > 0) {
+                    const result = await supabase
                         .from("case_answers")
                         .select("*")
-                        .in("question_id", (qs || []).map((q: any) => q.id))
+                        .in("question_id", qs.map((q: any) => q.id))
                         .eq("participant_id", myParticipant.id)
+                    const ans = result.data || []
+                    const aErr = result.error
                     if (aErr) throw new Error(aErr.message)
-                    setAnswers(ans || [])
+                    setAnswers(ans)
+                } else {
+                    setAnswers([])
                 }
                 // Details
                 const { data: dets, error: detErr } = await supabase
@@ -93,7 +114,7 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                 setLoading(false)
             }
         }
-        if (id && user) fetchData()
+        fetchData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, user, myParticipant?.id])
 
@@ -183,6 +204,10 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
         } finally {
             setDetailSubmitting(false)
         }
+    }
+
+    const handleAnswerSubmitted = (newAnswer: any) => {
+        setAnswers((prev) => [...prev, newAnswer])
     }
 
     if (loading) return <div className="flex justify-center items-center min-h-[40vh]"><div className="animate-spin rounded-full h-10 w-10 border-b-4 border-yellow border-4" /></div>
@@ -275,45 +300,16 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                     <CardTitle className="font-heading text-2xl">AI Questions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {questions.length === 0 && <div className="font-base text-gray-500">No questions yet.</div>}
-                    <Accordion type="multiple" className="w-full">
-                        {questions.map((q) => {
-                            const answeredObj = answers.find((a) => a.question_id === q.id)
-                            return (
-                                <AccordionItem key={q.id} value={q.id} className="border-2 border-border rounded-base mb-2 bg-white">
-                                    <AccordionTrigger className="font-heading text-lg px-4 py-2">{q.question}</AccordionTrigger>
-                                    <AccordionContent>
-                                        {answeredObj ? (
-                                            <Card className="bg-green-50 border-green-200 border-2">
-                                                <CardContent>
-                                                    <div className="text-base font-base">{answeredObj.answer}</div>
-                                                </CardContent>
-                                            </Card>
-                                        ) : myParticipant ? (
-                                            <div className="space-y-2">
-                                                <textarea
-                                                    className="neobrutalism-input w-full h-24 mb-2 border-2 border-border rounded-base"
-                                                    value={answerInputs[q.id] || ""}
-                                                    onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                                                    disabled={submitting}
-                                                />
-                                                <Button
-                                                    onClick={() => handleSubmitAnswer(q.id)}
-                                                    className="neobrutalism-button bg-green font-heading"
-                                                    disabled={submitting || !answerInputs[q.id]}
-                                                    aria-busy={submitting}
-                                                >
-                                                    Submit Answer
-                                                </Button>
-                                            </div>
-                                        ) : (
-                                            <div className="text-gray-400 italic">You are not a participant for this case.</div>
-                                        )}
-                                    </AccordionContent>
-                                </AccordionItem>
-                            )
-                        })}
-                    </Accordion>
+                    {myParticipant ? (
+                        <CaseQuestionAnswer
+                            questions={questions}
+                            answers={answers}
+                            participantId={myParticipant.id}
+                            onAnswerSubmitted={handleAnswerSubmitted}
+                        />
+                    ) : (
+                        <div className="text-gray-400 italic">You are not a participant for this case.</div>
+                    )}
                 </CardContent>
             </div>
         </div>
