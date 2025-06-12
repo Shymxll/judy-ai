@@ -1,13 +1,31 @@
 import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ReactQueryProvider } from "@/providers/react-query-provider"
 import { SupabaseAuthProvider } from "@/providers/supabase-auth-provider"
 import { Header } from "@/components/header"
 import { NeoToastProvider } from "@/components/neo-toaster"
-const inter = Inter({ subsets: ["latin"], weight: ["400", "600", "700", "900"] })
+
+// Configure fonts
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter"
+})
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta"
+})
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-jetbrains"
+})
 
 export const metadata: Metadata = {
   title: "JudyAI - Let AI Create Laws for Your Conflicts",
@@ -21,10 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
-      </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable} ${jetBrainsMono.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <ReactQueryProvider>
             <SupabaseAuthProvider>
