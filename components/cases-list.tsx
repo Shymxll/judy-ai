@@ -2,9 +2,13 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 import { useEffect, useState } from "react"
 import { useSupabaseAuth } from "@/providers/supabase-auth-provider"
 import { supabase } from "@/lib/supabaseClient"
+import { FaEye, FaGavel, FaUser, FaCalendar } from "react-icons/fa"
 
 type CaseListItem = {
   id: string
@@ -80,74 +84,117 @@ export function CasesList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string): "default" | "secondary" | "destructive" => {
     switch (status) {
       case "Pending Friend Response":
       case "waiting":
-        return "bg-yellow"
+        return "secondary"
       case "AI Analysis Complete":
       case "finished":
-        return "bg-green"
+        return "default"
       case "Waiting for AI Analysis":
       case "evaluating":
-        return "bg-blue"
+        return "secondary"
       default:
-        return "bg-secondary-background"
+        return "secondary"
     }
   }
 
   if (!user) {
-    return <div className="text-center py-12 text-xl">You must be logged in to see your cases.</div>
+    return (
+      <Card className="max-w-md mx-auto">
+        <CardContent className="text-center py-12">
+          <p className="text-xl mb-4">You must be logged in to see your cases.</p>
+          <Link href="/auth">
+            <Button>Sign In</Button>
+          </Link>
+        </CardContent>
+      </Card>
+    )
   }
 
   if (loading) {
-    return <div className="text-center py-12 text-xl">Loading cases...</div>
+    return (
+      <Card className="max-w-md mx-auto">
+        <CardContent className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-xl">Loading cases...</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   if (error) {
-    return <div className="text-center py-12 text-red-600">{error}</div>
+    return (
+      <Card className="max-w-md mx-auto border-destructive">
+        <CardContent className="text-center py-12">
+          <p className="text-destructive text-xl">{error}</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {cases.map((case_) => (
-        <div key={case_.id} className="neobrutalism-card p-6 rounded-md">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="text-2xl font-heading mb-2">{case_.title}</h3>
-              <p className="text-base font-base text-foreground/70">
-                Case #{case_.id.slice(0, 8)} • Created {new Date(case_.created_at).toLocaleDateString()}
-              </p>
+        <Card key={case_.id} className="hover:shadow-lg transition-shadow">
+          <CardHeader>
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <CardTitle className="text-2xl font-heading mb-2">{case_.title}</CardTitle>
+                <div className="flex items-center gap-4 text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <FaCalendar className="text-sm" />
+                    Case #{case_.id.slice(0, 8)}
+                  </span>
+                  <span>•</span>
+                  <span>Created {new Date(case_.created_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <Badge variant={getStatusVariant(case_.status)} className="ml-4">
+                {case_.status}
+              </Badge>
             </div>
-            <div className={`px-4 py-2 border-2 border-border rounded-md ${getStatusColor(case_.status)}`}>
-              <span className="font-heading text-sm">{case_.status}</span>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <FaUser className="text-sm" />
+              <span className="font-medium">Friend:</span>
+              <span>{case_.friendEmail || "-"}</span>
             </div>
-          </div>
-          <div className="mb-4">
-            <p className="font-base">
-              <span className="font-heading">Friend:</span> {case_.friendEmail || "-"}
-            </p>
-          </div>
-          <div className="flex space-x-4">
-            <Link href={`/case/${case_.id}`}>
-              <Button className="neobrutalism-button bg-blue text-sm">View Details</Button>
-            </Link>
-            {case_.lawId && (
-              <Link href={`/law/${case_.lawId}`}>
-                <Button className="neobrutalism-button bg-green text-sm">View Law</Button>
+
+            <Separator />
+
+            <div className="flex gap-3">
+              <Link href={`/case/${case_.id}`}>
+                <Button variant="default" size="sm" className="flex items-center gap-2">
+                  <FaEye className="text-sm" />
+                  View Details
+                </Button>
               </Link>
-            )}
-          </div>
-        </div>
+              {case_.lawId && (
+                <Link href={`/law/${case_.lawId}`}>
+                  <Button variant="secondary" size="sm" className="flex items-center gap-2">
+                    <FaGavel className="text-sm" />
+                    View Law
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       ))}
+
       {cases.length === 0 && (
-        <div className="text-center py-12">
-          <h3 className="text-2xl font-heading mb-4">No cases yet</h3>
-          <p className="text-lg font-base mb-6">Start your first case to see it here</p>
-          <Link href="/start-case">
-            <Button className="neobrutalism-button bg-yellow">Start a Case</Button>
-          </Link>
-        </div>
+        <Card className="max-w-md mx-auto">
+          <CardContent className="text-center py-12 space-y-4">
+            <h3 className="text-2xl font-heading">No cases yet</h3>
+            <p className="text-lg text-muted-foreground">Start your first case to see it here</p>
+            <Link href="/start-case">
+              <Button size="lg">Start a Case</Button>
+            </Link>
+          </CardContent>
+        </Card>
       )}
     </div>
   )

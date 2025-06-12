@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export function HeroSection() {
   return (
-    <section className="bg-foreground text-secondary-background py-16 md:py-24">
+    <section className="bg-foreground text-secondary-background py-16 md:py-24 min-h-screen">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-heading mb-8 leading-tight">

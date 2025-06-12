@@ -5,6 +5,10 @@ import { supabase } from "@/lib/supabaseClient"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
+import { Textarea } from "@/components/ui/textarea"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
+import { CheckCircle, AlertCircle } from "lucide-react"
 
 interface CaseQuestionAnswerProps {
     questions: any[]
@@ -47,41 +51,66 @@ export function CaseQuestionAnswer({ questions, answers, participantId, onAnswer
     }
 
     if (questions.length === 0) {
-        return <div className="font-base text-gray-500">No questions assigned to you yet.</div>
+        return (
+            <Card>
+                <CardContent className="text-center py-12">
+                    <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-lg text-muted-foreground">No questions assigned to you yet.</p>
+                </CardContent>
+            </Card>
+        )
     }
 
     return (
         <div className="space-y-4">
-            {error && <div className="text-red-600 font-base" role="alert">{error}</div>}
-            <Accordion type="multiple" className="w-full">
+            {error && (
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                </Alert>
+            )}
+
+            <Accordion type="multiple" className="w-full space-y-4">
                 {questions.map((q) => {
                     const answeredObj = answers.find((a) => a.question_id === q.id)
                     return (
-                        <AccordionItem key={q.id} value={q.id} className="border-2 border-border rounded-base mb-2 bg-white">
-                            <AccordionTrigger className="font-heading text-lg px-4 py-2">{q.question}</AccordionTrigger>
-                            <AccordionContent>
+                        <AccordionItem key={q.id} value={q.id} className="border rounded-lg">
+                            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                                <div className="flex items-center justify-between w-full">
+                                    <span className="font-heading text-lg text-left">{q.question}</span>
+                                    {answeredObj && (
+                                        <Badge variant="default" className="ml-2 flex items-center gap-1">
+                                            <CheckCircle className="h-3 w-3" />
+                                            Answered
+                                        </Badge>
+                                    )}
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="px-6 pb-6">
                                 {answeredObj ? (
-                                    <Card className="bg-green-50 border-green-200 border-2">
-                                        <CardContent>
-                                            <div className="text-base font-base">{answeredObj.answer}</div>
+                                    <Card className="bg-green-50 border-green-200">
+                                        <CardContent className="py-4">
+                                            <div className="flex items-start gap-2">
+                                                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                                                <div className="text-base">{answeredObj.answer}</div>
+                                            </div>
                                         </CardContent>
                                     </Card>
                                 ) : (
-                                    <div className="space-y-2">
-                                        <textarea
-                                            className="neobrutalism-input w-full h-24 mb-2 border-2 border-border rounded-base"
+                                    <div className="space-y-4">
+                                        <Textarea
+                                            placeholder="Type your answer here..."
                                             value={answerInputs[q.id] || ""}
                                             onChange={(e) => handleAnswerChange(q.id, e.target.value)}
                                             disabled={submitting}
-                                            placeholder="Type your answer here..."
+                                            className="min-h-[100px] resize-none"
                                         />
                                         <Button
                                             onClick={() => handleSubmitAnswer(q.id)}
-                                            className="neobrutalism-button bg-green font-heading"
                                             disabled={submitting || !answerInputs[q.id]}
-                                            aria-busy={submitting}
+                                            className="w-full sm:w-auto"
                                         >
-                                            Submit Answer
+                                            {submitting ? "Submitting..." : "Submit Answer"}
                                         </Button>
                                     </div>
                                 )}
