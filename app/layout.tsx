@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { ReactQueryProvider } from "@/providers/react-query-provider"
 import { SupabaseAuthProvider } from "@/providers/supabase-auth-provider"
 import { Header } from "@/components/header"
-import { NeoToastProvider } from "@/components/neo-toaster"
 
 // Configure fonts
 const inter = Inter({
@@ -39,14 +38,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${plusJakartaSans.variable} ${jetBrainsMono.variable} font-sans`}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable} ${jetBrainsMono.variable} font-sans dark:bg-background dark:border-border bg-background`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <ReactQueryProvider>
             <SupabaseAuthProvider>
-              <NeoToastProvider>
                 <Header />
-                {children}
-              </NeoToastProvider>
+                {children}  
             </SupabaseAuthProvider>
           </ReactQueryProvider>
         </ThemeProvider>

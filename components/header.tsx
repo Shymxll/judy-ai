@@ -10,7 +10,6 @@ import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "./ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { useNeoToast } from "@/components/neo-toaster"
 
 function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   if (avatarUrl) {
@@ -36,7 +35,6 @@ export function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { user, logout } = useSupabaseAuth()
-  const { showToast } = useNeoToast()
 
   const handleProtectedRoute = (e: React.MouseEvent, route: string) => {
     if (!user) {
@@ -73,10 +71,10 @@ export function Header() {
 
   return (
     <>
-      <header className="border-b-4 border-border bg-yellow relative z-50">
+      <header className=" bg-yellow relative z-50 dark:bg-background dark:border-border bg-background">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-4xl font-heading text-foreground" onClick={() => showToast({ title: "Hello", description: "This is a test toast", type: "success" })  }>
+            <Link href="/" className="text-4xl font-heading text-foreground">
               Judy
             </Link>
 
@@ -140,7 +138,7 @@ export function Header() {
                       <Button
                         className="w-full text-left py-3 border-t border-border hover:bg-gray-100 font-medium hover:text-red-600 bg-red-600 text-white cursor-pointer rounded-none"
                         onClick={logout}
-                        variant="reverse"
+                        variant="destructive"
                       >
                         Logout
                       </Button>

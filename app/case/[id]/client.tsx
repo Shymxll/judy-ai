@@ -354,24 +354,8 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     if (!caseData) return <div className="text-center py-12 font-heading text-lg">Case not found.</div>
 
     return (
-        <div className="max-w-5xl mx-auto py-12 space-y-8">
-            {/* Sacred Judge Judy at the Top */}
-            <div className="flex justify-center items-center mb-10">
-                <Card className="flex flex-col items-center shadow-lg px-8 py-6 min-w-[220px] bg-gradient-to-b from-yellow-50 to-background relative">
-                    <div className="absolute -top-6"><GiCrown className="text-4xl text-yellow-500 drop-shadow-lg" aria-label="Crown" /></div>
-                    <Avatar className="mb-2 ring-4 ring-yellow-300 ring-offset-2">
-                        <AvatarImage src="/judge-judy-avatar.png" alt="Judge Judy" />
-                        <AvatarFallback>J</AvatarFallback>
-                    </Avatar>
-                    <div className="flex items-center gap-2 mb-1">
-                        <FaGavel className="text-2xl text-yellow-600" aria-label="Judge Gavel" />
-                        <span className="font-heading text-2xl text-yellow-700">Judy</span>
-                    </div>
-                    <div className="font-heading text-lg text-yellow-700 italic mb-1">The Honorable Judge Judy</div>
-                    <Badge className="bg-yellow-500 text-yellow-50 font-bold">Sacred Judge</Badge>
-                </Card>
-            </div>
-
+        <div className="max-w-5xl mx-auto py-12 space-y-8 dark:bg-background dark:border-border bg-background">
+            
             {/* Courtroom Middle Row: Plaintiff, Case Board, Defendant */}
             <div className="flex flex-col md:flex-row justify-between items-stretch gap-6 mb-8">
                 {/* Plaintiff (Creator) */}

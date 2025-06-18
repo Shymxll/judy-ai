@@ -1,7 +1,5 @@
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { CasesList } from "@/components/cases-list"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function MyCasesPage() {
   return (
@@ -18,7 +16,6 @@ export default function MyCasesPage() {
           <CasesList />
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

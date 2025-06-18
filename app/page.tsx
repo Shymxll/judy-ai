@@ -1,8 +1,7 @@
-import { Header } from "@/components/header"
+
 import { HeroSection } from "@/components/hero-section"
 import { HowItWorksSection } from "@/components/how-it-works-section"
 import { PopularLawsSection } from "@/components/popular-laws-section"
-import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
@@ -12,7 +11,6 @@ export default function Home() {
         <HowItWorksSection />
         <PopularLawsSection />
       </main>
-      <Footer />
     </div>
   )
 }

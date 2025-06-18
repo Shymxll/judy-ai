@@ -18,7 +18,6 @@ export default function BrowseLawsPage() {
           <LawsGrid />
         </div>
       </main>
-      <Footer />
     </div>
   )
 }
