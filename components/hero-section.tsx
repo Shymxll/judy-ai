@@ -7,7 +7,6 @@ export function HeroSection() {
       {/* Arka plan videosu */}
       <video
         autoPlay
-        muted
         loop
         playsInline
         className="w-full h-auto object-cover z-0"
