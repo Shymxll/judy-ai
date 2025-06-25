@@ -17,7 +17,7 @@ export function HeroSection() {
       </video>
 
       {/* İçerik */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-center items-start px-4 sm:px-8 md:px-16 py-10 bg-foreground/70">
+      <div className="absolute inset-0 z-10 flex flex-col justify-center items-start px-4 sm:px-8 md:px-16 py-10 bg-chart-2/40">
         {/* Başlık ve açıklama istersen buraya eklenebilir */}
       </div>
 
@@ -26,7 +26,7 @@ export function HeroSection() {
         {/* Mobil için buton - Video alt ortasında */}
         <div className="sm:hidden absolute bottom-4 left-16 transform -translate-x-1/2">
           <Link href="/start-case">
-            <Button className="bg-foreground text-white text-base px-8 py-3 shadow-lg hover:bg-red/90 whitespace-nowrap">
+            <Button className="bg-foreground text-background text-base px-8 py-3 shadow-lg rounded-md hover:bg-primary whitespace-nowrap">
               Start Now
             </Button>
           </Link>
@@ -35,7 +35,7 @@ export function HeroSection() {
         {/* Desktop için buton - Video sol alt köşesinde */}
         <div className="hidden sm:block absolute bottom-16 left-15">
           <Link href="/start-case">
-            <Button className="bg-foreground text-white text-xl px-32 py-12 shadow-lg rounded-md hover:bg-red/90 whitespace-nowrap">
+            <Button className="bg-foreground text-background text-xl px-32 py-12 shadow-lg rounded-md hover:bg-primary whitespace-nowrap">
               Start Now
             </Button>
           </Link>
