@@ -182,7 +182,7 @@ export function Header() {
 
             {/* Mobile Menu Button */}
             <Button
-              className="lg:hidden neobrutalism-button bg-secondary-background p-2"
+              className="lg:hidden bg-foreground p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -192,7 +192,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-yellow border-b-4 border-border z-40">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b-4 border-border z-50">
             <div className="container mx-auto px-4 py-6 space-y-4">
               <Link
                 href="/start-case"
@@ -228,8 +228,8 @@ export function Header() {
                     <div className="flex items-center space-x-3">
                       <UserAvatar name={userName} avatarUrl={avatarUrl} />
                       <div>
-                        <div className="font-bold">{userName}</div>
-                        <div className="text-xs text-gray-500">{userEmail}</div>
+                        <div className="font-bold text-foreground">{userName}</div>
+                        <div className="text-xs text-foreground">{userEmail}</div>
                       </div>
                     </div>
                     <Button
@@ -237,7 +237,7 @@ export function Header() {
                         logout()
                         closeMobileMenu()
                       }}
-                      className="neobrutalism-button bg-red text-sm w-full"
+                      className="bg-foreground text-sm w-full"
                     >
                       Logout
                     </Button>
