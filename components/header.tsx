@@ -10,6 +10,11 @@ import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "./ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import Image from "next/image"
+import { useTheme } from "next-themes"
+
+
+
 
 function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   if (avatarUrl) {
@@ -35,6 +40,8 @@ export function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { user, logout } = useSupabaseAuth()
+  const { resolvedTheme } = useTheme()
+
 
   const handleProtectedRoute = (e: React.MouseEvent, route: string) => {
     if (!user) {
@@ -74,9 +81,18 @@ export function Header() {
       <header className=" bg-yellow relative z-50 dark:bg-background dark:border-border bg-background">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-4xl font-heading text-foreground">
-              Judy
+            <Link href="/" className="text-4xl font-heading text-foreground flex items-center gap-2">
+              <Image
+                src={resolvedTheme === "dark" ? "/assets/darklogo.png" : "/assets/lightlogo.png"}
+                alt="Judy Logo"
+                width={40}
+                height={40}
+                className="h-10 w-auto"
+                priority
+              />
             </Link>
+
+
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">

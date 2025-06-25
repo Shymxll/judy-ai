@@ -3,19 +3,41 @@ import { Button } from "@/components/ui/button"
 
 export function HeroSection() {
   return (
-    <section className="bg-foreground text-secondary-background py-16 md:py-24 min-h-screen">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-heading mb-8 leading-tight">
-            Let AI Create a Law for Your Conflict
-          </h1>
+    <section className="relative w-full text-secondary-background overflow-hidden">
+      {/* Arka plan videosu */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="w-full h-auto object-cover z-0"
+      >
+        <source src="/assets/video.mp4" type="video/mp4" />
+        Tarayıcınız video etiketini desteklemiyor.
+      </video>
 
-          <p className="text-xl md:text-2xl font-base mb-8 max-w-2xl">
-            Argue your case. Let the AI judge. Discover new laws.
-          </p>
+      {/* İçerik */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-center items-start px-4 sm:px-8 md:px-16 py-10 bg-foreground/70">
+        {/* Başlık ve açıklama istersen buraya eklenebilir */}
+      </div>
 
+      {/* Start Now Butonu - Video üzerine sabitlenmiş */}
+      <div className="absolute z-20">
+        {/* Mobil için buton - Video alt ortasında */}
+        <div className="sm:hidden absolute bottom-4 left-16 transform -translate-x-1/2">
           <Link href="/start-case">
-            <Button className="neobrutalism-button bg-red text-2xl">Start Now</Button>
+            <Button className="bg-foreground text-white text-base px-8 py-3 shadow-lg hover:bg-red/90 whitespace-nowrap">
+              Start Now
+            </Button>
+          </Link>
+        </div>
+
+        {/* Desktop için buton - Video sol alt köşesinde */}
+        <div className="hidden sm:block absolute bottom-16 left-15">
+          <Link href="/start-case">
+            <Button className="bg-foreground text-white text-xl px-32 py-12 shadow-lg rounded-md hover:bg-red/90 whitespace-nowrap">
+              Start Now
+            </Button>
           </Link>
         </div>
       </div>
