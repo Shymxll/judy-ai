@@ -73,4 +73,34 @@ export async function fetchCaseResultsAndWinner(caseId: string) {
 export async function updateCaseStatus(caseId: string, status: string) {
     const { error } = await supabase.from("cases").update({ status }).eq("id", caseId)
     if (error) throw new Error(error.message)
+}
+
+export async function fetchAllLaws() {
+    const { data, error } = await supabase.from("laws").select("*").order("created_at", { ascending: false })
+    if (error) throw new Error(error.message)
+    return data || []
+}
+
+export async function likeLaw(lawId: string, userId: string) {
+    const { error } = await supabase.from("law_likes").upsert({ law_id: lawId, user_id: userId, type: "like" }, { onConflict: "law_id,user_id" })
+    if (error) throw new Error(error.message)
+}
+
+export async function dislikeLaw(lawId: string, userId: string) {
+    const { error } = await supabase.from("law_likes").upsert({ law_id: lawId, user_id: userId, type: "dislike" }, { onConflict: "law_id,user_id" })
+    if (error) throw new Error(error.message)
+}
+
+export async function getLawLikes(lawId: string) {
+    const { data, error } = await supabase.from("law_likes").select("type").eq("law_id", lawId)
+    if (error) throw new Error(error.message)
+    const fair = data?.filter((d: any) => d.type === "like").length || 0
+    const unfair = data?.filter((d: any) => d.type === "dislike").length || 0
+    return { fair, unfair }
+}
+
+export async function getUserLawLike(lawId: string, userId: string) {
+    const { data, error } = await supabase.from("law_likes").select("type").eq("law_id", lawId).eq("user_id", userId).single()
+    if (error && error.code !== "PGRST116") throw new Error(error.message)
+    return data?.type || null
 } 

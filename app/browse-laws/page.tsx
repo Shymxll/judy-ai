@@ -1,9 +1,32 @@
+"use client"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { LawsGrid } from "@/components/laws-grid"
 import { SearchBar } from "@/components/search-bar"
+import { useEffect, useState } from "react"
+import { fetchAllLaws } from "@/lib/caseService"
 
 export default function BrowseLawsPage() {
+  const [laws, setLaws] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    const fetchLaws = async () => {
+      setLoading(true)
+      setError("")
+      try {
+        const data = await fetchAllLaws()
+        setLaws(data)
+      } catch (err: any) {
+        setError(err.message || "An error occurred.")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchLaws()
+  }, [])
+
   return (
     <div className="min-h-screen bg-background">
       <main className="py-16">
@@ -13,7 +36,9 @@ export default function BrowseLawsPage() {
             Discover laws created by artificial intelligence from real conflicts
           </p>
           <SearchBar />
-          <LawsGrid />
+          {loading && <div className="text-center py-8">Loading...</div>}
+          {error && <div className="text-center text-red-600 py-8">{error}</div>}
+          {!loading && !error && <LawsGrid laws={laws} />}
         </div>
       </main>
     </div>
