@@ -14,13 +14,13 @@ export class Backend {
     }
 
     public async analyzeCase(caseId: string): Promise<any> {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/analyze?caseId=${caseId}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/analyze?caseId=${caseId}`);
         return response.data;
     }
     
 
     public async processCase(caseId: string): Promise<any> {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/process?caseId=${caseId}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/analyze/process?caseId=${caseId}`);
         return response.data;
     }
     
