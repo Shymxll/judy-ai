@@ -78,8 +78,8 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 bg-yellow relative z-50 dark:bg-background dark:border-border bg-background shadow-md backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="sticky top-4 bg-navy-900 w-full z-50 ">
+        <div className="container mx-auto px-4 py-3  w-[70%] border rounded-lg  border-amber-700/20 backdrop-blur-sm">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-4xl font-heading text-foreground flex items-center gap-2">
               <Image
