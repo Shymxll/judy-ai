@@ -24,7 +24,6 @@ import {
     updateCaseStatus
 } from "@/lib/caseService"
 import { CaseDetailsOnlyBoard } from "@/components/case-details-only-board"
-import { analyze, process } from "@/lib/analyzeService"
 import { useRouter } from "next/navigation"
 
 export default function CaseDetailPage({ params }: { params: { id: string } }) {
@@ -268,7 +267,14 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const handleNudgeProsecutorProcess = async () => {
         setProcessLoading(true)
         try {
-            const { success, error } = await process(id)
+            const res = await fetch(`/api/analyze/process`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ caseId: id })
+            })
+
+            
+            const { success, error } = await res.json()
             if (success) {
                 toast({
                     title: "İşlem başlatıldı!",
@@ -282,12 +288,14 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                     description: error || "Savcıya istek gönderilemedi.",
                     variant: "destructive",
                 })
-            }   
+            }
             toast({
                 title: "Savcıya işlem başlatma isteği gönderildi!",
                 description: "İşlem başlatıldı.",
                 variant: "default",
             })
+
+            router.refresh()
         } catch (err: any) {
             toast({
                 title: "Hata oluştu!",
@@ -299,17 +307,21 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
         }
     }
 
-
     const handleNudgeAnalyzer = async () => {
         setAnalyzeLoading(true)
         try {
-            const { success, error } = await analyze(id)
+            const res = await fetch(`/api/analyze`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ caseId: id })
+            })
+            const { success, error } = await res.json()
             if (success) {
                 toast({
                     title: "İşlem başlatıldı!",
                     description: "Analiz işlemi başlatıldı.",
                     variant: "default",
-                })  
+                })
                 router.refresh()
             } else {
                 toast({
@@ -318,16 +330,17 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                     variant: "destructive",
                 })
             }
+            router.refresh()
         } catch (err: any) {
             toast({
                 title: "Hata oluştu!",
-                description: err?.message || "Analiz işlemi başlatılamadı.",    
+                description: err?.message || "Analiz işlemi başlatılamadı.",
             })
         } finally {
             setAnalyzeLoading(false)
         }
     }
-    
+
 
     if (loading) return <div className="flex justify-center items-center min-h-[40vh]"><div className="animate-spin rounded-full h-10 w-10 border-b-4 border-yellow border-4" /></div>
     if (error) return <div className="text-center py-12 text-red-600 font-heading text-xl">{error}</div>

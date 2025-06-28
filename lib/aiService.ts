@@ -1,7 +1,16 @@
 import OpenAI from "openai";
 
-// Sabit bir prompt ile OpenAI'dan yanıt dönen basit fonksiyon
-const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY });
+// Prevent usage on the client
+if (typeof window !== "undefined") {
+    throw new Error("OpenAI API can only be used server-side. Do not import aiService in client components.");
+}
+
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) {
+    throw new Error("OPENAI_API_KEY environment variable is missing. Please set it in your .env.local file.");
+}
+
+const openai = new OpenAI({ apiKey });
 
 type RunSimpleAgentOptions = {
     systemPrompt: string;
