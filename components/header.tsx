@@ -165,13 +165,13 @@ export function Header() {
                 <div className="flex items-center space-x-4">
                   <Button
                     onClick={() => setShowLoginModal(true)}
-                    className="neobrutalism-button bg-secondary-background text-sm px-4 py-2"
+                    className="bg-foreground text-sm px-4 py-2"
                   >
                     Login
                   </Button>
                   <Button
                     onClick={() => setShowLoginModal(true)}
-                    className="neobrutalism-button bg-green text-sm px-4 py-2"
+                    className="bg-foreground text-sm px-4 py-2"
                   >
                     Register
                   </Button>
