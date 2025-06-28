@@ -24,7 +24,7 @@ import {
     updateCaseStatus
 } from "@/lib/caseService"
 import { CaseDetailsOnlyBoard } from "@/components/case-details-only-board"
-import { process } from "@/lib/analyzeService"
+import { analyze, process } from "@/lib/analyzeService"
 import { useRouter } from "next/navigation"
 
 export default function CaseDetailPage({ params }: { params: { id: string } }) {
@@ -299,6 +299,36 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
         }
     }
 
+
+    const handleNudgeAnalyzer = async () => {
+        setAnalyzeLoading(true)
+        try {
+            const { success, error } = await analyze(id)
+            if (success) {
+                toast({
+                    title: "İşlem başlatıldı!",
+                    description: "Analiz işlemi başlatıldı.",
+                    variant: "default",
+                })  
+                router.refresh()
+            } else {
+                toast({
+                    title: "Hata oluştu!",
+                    description: error || "Analiz işlemi başlatılamadı.",
+                    variant: "destructive",
+                })
+            }
+        } catch (err: any) {
+            toast({
+                title: "Hata oluştu!",
+                description: err?.message || "Analiz işlemi başlatılamadı.",    
+            })
+        } finally {
+            setAnalyzeLoading(false)
+        }
+    }
+    
+
     if (loading) return <div className="flex justify-center items-center min-h-[40vh]"><div className="animate-spin rounded-full h-10 w-10 border-b-4 border-yellow border-4" /></div>
     if (error) return <div className="text-center py-12 text-red-600 font-heading text-xl">{error}</div>
     if (!caseData) return <div className="text-center py-12 font-heading text-lg">Case not found.</div>
@@ -366,8 +396,8 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
                     disableNavigation={false}
                 />
                 <CaseNudgeProsecutor
-                    onNudge={handleNudgeProsecutorProcess}
-                    loading={processLoading}
+                    onNudge={handleNudgeAnalyzer}
+                    loading={analyzeLoading}
                 />
             </div>
         )
