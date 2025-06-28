@@ -78,7 +78,7 @@ export function Header() {
 
   return (
     <>
-      <header className=" bg-yellow relative z-50 dark:bg-background dark:border-border bg-background">
+      <header className="sticky top-0 bg-yellow relative z-50 dark:bg-background dark:border-border bg-background shadow-md backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-4xl font-heading text-foreground flex items-center gap-2">
@@ -192,7 +192,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b-4 border-border z-50">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b-4 border-border z-50 shadow-lg">
             <div className="container mx-auto px-4 py-6 space-y-4">
               <Link
                 href="/start-case"

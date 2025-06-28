@@ -11,7 +11,7 @@ export function HeroSection() {
         playsInline
         className="w-full h-auto object-cover z-0"
       >
-        <source src="/assets/video.mp4" type="video/mp4" />
+        <source src="https://mxvzhvnqbicigkzptjso.supabase.co/storage/v1/object/public/docs//video.mp4" type="video/mp4" />
         Tarayıcınız video etiketini desteklemiyor.
       </video>
 

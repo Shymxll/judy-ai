@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { ReactQueryProvider } from "@/providers/react-query-provider"
 import { SupabaseAuthProvider } from "@/providers/supabase-auth-provider"
 import { Header } from "@/components/header"
+import { BoltBadge } from "@/components/bolt-badge"
 
 // Configure fonts
 const inter = Inter({
@@ -43,7 +44,8 @@ export default function RootLayout({
           <ReactQueryProvider>
             <SupabaseAuthProvider>
                 <Header />
-                {children}  
+                {children}
+                <BoltBadge />
             </SupabaseAuthProvider>
           </ReactQueryProvider>
         </ThemeProvider>
