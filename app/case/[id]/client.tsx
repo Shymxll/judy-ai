@@ -24,6 +24,8 @@ import {
     updateCaseStatus
 } from "@/lib/caseService"
 import { CaseDetailsOnlyBoard } from "@/components/case-details-only-board"
+import { process } from "@/lib/analyzeService"
+import { useRouter } from "next/navigation"
 
 export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const { user } = useSupabaseAuth()
@@ -51,7 +53,7 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const { toast } = useToast()
     const [analyzeLoading, setAnalyzeLoading] = useState(false)
     const [processLoading, setProcessLoading] = useState(false)
-
+    const router = useRouter()
     // Kullanıcının participant kaydını bul
     const myParticipant = participants.find(
         (p) => p.user_id === user?.id || p.email === user?.email
@@ -266,7 +268,21 @@ export default function CaseDetailPage({ params }: { params: { id: string } }) {
     const handleNudgeProsecutorProcess = async () => {
         setProcessLoading(true)
         try {
-            await Backend.getInstance().processCase(id)
+            const { success, error } = await process(id)
+            if (success) {
+                toast({
+                    title: "İşlem başlatıldı!",
+                    description: "Savcıya işlemi yaptı",
+                    variant: "default",
+                })
+                router.refresh()
+            } else {
+                toast({
+                    title: "Hata oluştu!",
+                    description: error || "Savcıya istek gönderilemedi.",
+                    variant: "destructive",
+                })
+            }   
             toast({
                 title: "Savcıya işlem başlatma isteği gönderildi!",
                 description: "İşlem başlatıldı.",
