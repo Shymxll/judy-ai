@@ -7,35 +7,35 @@ const steps = [
     gif: "/assets/disagreement.gif",
     title: "The Dispute Begins",
     description:
-      "You and your friend have a disagreement and can't decide who is right.",
+      "You and your friend have a disagreement and can't decide who is right. You can't agree on who is right.",
     icon: "⚖️"
   },
   {
     gif: "/assets/listening.gif",
     title: "Present Your Case",
     description:
-      "Bring your case to Judy and explain the situation in detail.",
+      "Bring your case to Judy and explain the situation in detail. Tell it what you think is right and why. You can also bring evidence to support your case.",
     icon: "📝"
   },
   {
     gif: "/assets/asking.gif",
     title: "Cross-Examination",
     description:
-      "Judy will ask you all the necessary questions to fully understand the case.",
+      "Judy will ask you all the necessary questions to fully understand the case. Answer them as best you can. ",
     icon: "🔍"
   },
   {
     gif: "/assets/evidence.gif",
     title: "The Verdict",
     description:
-      "Based on the evidence and testimony, Judy determines who is right.",
+      "Based on the evidence and testimony, Judy determines who is right. It will explain its reasoning and give you a verdict.",
     icon: "🧑‍⚖️"
   },
   {
     gif: "/assets/result.gif",
     title: "Precedent Established",
     description:
-      "A new social law is created, so others can refer to it in the future.",
+      "A new social law is created, so others can refer to it in the future. You can also refer to it in the future.  ",
     icon: "📜"
   },
 ];
@@ -72,25 +72,19 @@ export default function Home() {
   return (
     <div className="min-h-screen max-w-7xl mx-auto w-full bg-background">
       {/* Hero Section - Full Width, No Borders */}
-        <section className=" w-full grid-background max-w-7xl mx-auto min-h-screen flex flex-col justify-center items-center overflow-hidden ">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <GavelSVG className="absolute top-1/4 left-1/4 w-40 h-40 text-amber-800/50" />
-          <ScalesSVG className="absolute bottom-1/4 right-1/4 w-40 h-40 text-amber-900/50" />
-        </div>
-
-          <div className="w-full max-w-7xl mx-auto px-4  ">
+      <section className=" w-full grid-background max-w-7xl mx-auto min-h-screen flex flex-col justify-center items-center overflow-hidden ">
+        <div className="w-full max-w-7xl mx-auto px-4  ">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2  md:mb-0 md:pr-8">
               <div className="text-center md:text-left">
-                <span className="inline-block text-5xl mb-6">{steps[0].icon}</span>
-                <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 text-amber-900">
+                <span className="inline-block text-6xl mb-8">{steps[0].icon}</span>
+                <h1 className="text-5xl md:text-7xl font-serif font-bold mb-8 text-amber-900">
                   The Court of Judy
                 </h1>
-                <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4 text-gray-900">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-gray-900">
                   {steps[0].title}
                 </h2>
-                <p className="text-lg md:text-xl text-gray-800 max-w-xl">
+                <p className="text-xl md:text-2xl text-gray-800 max-w-2xl">
                   {steps[0].description}
                 </p>
 
@@ -116,7 +110,7 @@ export default function Home() {
                 <img
                   src={steps[0].gif}
                   alt={steps[0].title}
-                  className="w-96 h-96 md:w-80 md:h-80 rounded-xl object-cover relative"
+                  className="w-[28rem] h-[28rem] md:w-[24rem] md:h-[24rem] rounded-xl object-cover relative"
                   aria-label={steps[0].title + ' illustration'}
                 />
               </div>
@@ -127,27 +121,26 @@ export default function Home() {
 
       {/* Court Proceedings (Steps) - Alternating Layout */}
       <main className="w-full bg-background">
-        <div className="max-w-7xl mx-auto py-16 md:py-5">
-
+        <div className="max-w-7xl mx-auto h-screen md:h-auto overflow-y-auto snap-y snap-mandatory">
 
           {steps.slice(1).map((step, idx) => (
             <div
               key={idx + 1}
-              className={`w-full flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center py-16 md:py-24 px-4`}
+              className={`w-full max-w-7xl mx-auto flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center  px-4 min-h-screen snap-start`}
               style={{ background: 'var(--background, #f5f5f5)' }}
             >
               {/* Image Section */}
-              <div className="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
+              <div className="w-full md:w-1/2 flex justify-center mb-12 md:mb-0">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-amber-200/20 rounded-2xl -m-3 blur-xl"></div>
+                  <div className="absolute inset-0  rounded-2xl -m-3 blur-xl"></div>
                   <div className="relative">
                     <img
                       src={step.gif}
                       alt={step.title}
-                      className="w-64 h-64 rounded-xl object-cover"
+                      className="w-80 h-80 rounded-2xl object-cover"
                       aria-label={step.title + ' illustration'}
                     />
-                    <div className="absolute -bottom-5 -right-5 w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-3xl ">
+                    <div className="absolute -bottom-7 -right-7 w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center text-4xl ">
                       {step.icon}
                     </div>
                   </div>
@@ -155,15 +148,15 @@ export default function Home() {
               </div>
 
               {/* Content Section */}
-              <div className="w-full md:w-1/2 md:px-8">
+              <div className="w-full md:w-1/2 md:px-12">
                 <div className={`text-center ${idx % 2 === 0 ? 'md:text-left' : 'md:text-right'}`}>
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-200 text-amber-900 font-bold text-lg mb-4">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-200 text-amber-900 font-bold text-2xl mb-6">
                     {idx + 2}
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-serif font-bold mb-4 text-amber-900">
+                  <h3 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-amber-900">
                     {step.title}
                   </h3>
-                  <p className="text-lg text-amber-800 max-w-xl mx-auto md:mx-0">
+                  <p className="text-xl text-amber-800 max-w-2xl mx-auto md:mx-0">
                     {step.description}
                   </p>
                 </div>
@@ -172,18 +165,6 @@ export default function Home() {
           ))}
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="w-full py-8 bg-amber-200 text-center text-amber-900">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-center mb-4">
-            <GavelSVG className="w-8 h-8 text-amber-600" />
-          </div>
-          <p className="text-sm opacity-70">
-            Justice served by Judy • All disputes fairly resolved
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
