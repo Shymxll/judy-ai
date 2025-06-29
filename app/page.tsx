@@ -4,35 +4,35 @@ import React from "react";
 
 const steps = [
   {
-    gif: "/assets/durt.gif",
+    gif: "/assets/disagreement.gif",
     title: "The Dispute Begins",
     description:
       "You and your friend have a disagreement and can't decide who is right.",
     icon: "⚖️"
   },
   {
-    gif: "/assets/sleep.gif",
+    gif: "/assets/listening.gif",
     title: "Present Your Case",
     description:
       "Bring your case to Judy and explain the situation in detail.",
     icon: "📝"
   },
   {
-    gif: "/assets/durt.gif",
+    gif: "/assets/asking.gif",
     title: "Cross-Examination",
     description:
       "Judy will ask you all the necessary questions to fully understand the case.",
     icon: "🔍"
   },
   {
-    gif: "/assets/sleep.gif",
+    gif: "/assets/evidence.gif",
     title: "The Verdict",
     description:
       "Based on the evidence and testimony, Judy determines who is right.",
     icon: "🧑‍⚖️"
   },
   {
-    gif: "/assets/durt.gif",
+    gif: "/assets/result.gif",
     title: "Precedent Established",
     description:
       "A new social law is created, so others can refer to it in the future.",
